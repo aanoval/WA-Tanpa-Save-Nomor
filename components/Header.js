@@ -2,12 +2,12 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
 import Link from 'next/link';
-import countryList from 'react-select-country-list';
+import countryTelephoneCode from 'country-telephone-code';
 
 export default function Header({ language, toggleLanguage, scrolled }) {
   const content = {
     id: {
-      cta: 'Mulai Sekarang',
+      cta: ']-[Mulai Sekarang',
       form: {
         title: 'Kirim Pesan WhatsApp',
         subtitle: 'Masukkan nomor dan pesan untuk kirim langsung.',
@@ -37,10 +37,12 @@ export default function Header({ language, toggleLanguage, scrolled }) {
   const [formData, setFormData] = useState({ countryCode: '62', phone: '', message: '' });
   const [formError, setFormError] = useState('');
   const canvasRef = useRef(null);
-  const countries = countryList().getData().map(country => ({
-    ...country,
-    value: country.value.replace('+', ''),
-  }));
+
+  // Sort countries to prioritize Indonesia
+  const countries = Object.entries(countryTelephoneCode).map(([name, code]) => ({
+    label: name.charAt(0).toUpperCase() + name.slice(1),
+    value: code.replace('+', ''),
+  })).sort((a, b) => (a.value === '62' ? -1 : b.value === '62' ? 1 : a.label.localeCompare(b.label)));
 
   // Bubble Animation
   useEffect(() => {
@@ -170,7 +172,7 @@ export default function Header({ language, toggleLanguage, scrolled }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className={`min-h-[80vh] relative flex flex-col pt-20 px-4 bg-gradient-to-br from-[#005C4B] to-[#4CAF50] text-white ${scrolled ? 'shadow-md' : ''}`}
+      className="min-h-[80vh] relative flex flex-col pt-20 px-4 bg-gradient-to-br from-[#005C4B] to-[#4CAF50] text-white"
       id="form"
     >
       <canvas ref={canvasRef} className="absolute inset-0 z-0" />
