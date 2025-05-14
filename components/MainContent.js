@@ -27,9 +27,9 @@ const content = {
     },
     about: {
       title: 'Tentang Kami',
-      subtitle: 'Aibiz ID - Penyedia Resmi WhatsApp Business Platform',
-      desc: 'Kami adalah mitra terpercaya untuk bisnis yang ingin mengoptimalkan komunikasi pelanggan melalui WhatsApp. Dengan solusi AI canggih, kami menyediakan Agent AI WhatsApp untuk layanan pelanggan otomatis, pemesanan instan, dan integrasi nomor bisnis yang mulus. Sebagai penyedia resmi WhatsApp Business API, kami menjamin keamanan, keandalan, dan pengalaman komunikasi yang luar biasa untuk bisnis Anda.',
-      cta: 'Jelajahi Solusi Kami',
+      subtitle: 'Aibiz ID adalah penyedia resmi WhatsApp Business Platform.',
+      desc: 'Kami membantu bisnis mengotomatiskan komunikasi pelanggan melalui WhatsApp dengan solusi AI cerdas. Layanan kami mencakup Agent AI WhatsApp untuk pelayanan pelanggan, pemesanan otomatis, dan integrasi mudah dengan nomor bisnis Anda. Sebagai penyedia resmi WhatsApp Business API, kami memastikan solusi yang aman dan terpercaya untuk kebutuhan bisnis Anda.',
+      cta: 'Pelajari Lebih Lanjut',
     },
   },
   en: {
@@ -56,9 +56,9 @@ const content = {
     },
     about: {
       title: 'About Us',
-      subtitle: 'Aibiz ID - Official WhatsApp Business Platform Provider',
-      desc: 'We are a trusted partner for businesses looking to optimize customer communication via WhatsApp. With advanced AI solutions, we provide WhatsApp AI Agents for automated customer service, instant ordering, and seamless business number integration. As an official WhatsApp Business API provider, we guarantee security, reliability, and an exceptional communication experience for your business.',
-      cta: 'Explore Our Solutions',
+      subtitle: 'Aibiz ID is an official WhatsApp Business Platform provider.',
+      desc: 'We help businesses automate customer communication via WhatsApp with smart AI solutions. Our services include WhatsApp AI Agent for customer service, automated ordering, and easy integration with your business number. As an official WhatsApp Business API provider, we ensure secure and reliable solutions for your business needs.',
+      cta: 'Learn More',
     },
   },
 };
@@ -70,58 +70,40 @@ export default function MainContent({ language }) {
 
   // History Storage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedHistory = localStorage.getItem('waHistory');
-      if (savedHistory) {
-        const parsedHistory = JSON.parse(savedHistory).slice(0, 10);
-        setHistory(parsedHistory);
-        if (parsedHistory.length < 4) {
-          setCurrentSlide(Math.floor(parsedHistory.length / 2));
-        }
+    const savedHistory = localStorage.getItem('waHistory');
+    if (savedHistory) {
+      const parsedHistory = JSON.parse(savedHistory).slice(0, 10);
+      setHistory(parsedHistory);
+      if (parsedHistory.length < 4) {
+        setCurrentSlide(Math.floor(parsedHistory.length / 2));
       }
     }
   }, []);
 
   const handleCopy = (item) => {
-    if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(`Number: ${item.number}\nMessage: ${item.message}`);
-      alert(language === 'id' ? 'Teks disalin ke clipboard!' : 'Text copied to clipboard!');
-    }
+    navigator.clipboard.writeText(`Number: ${item.number}\nMessage: ${item.message}`);
+    alert(language === 'id' ? 'Teks disalin ke clipboard!' : 'Text copied to clipboard!');
   };
 
   const handleResend = (item) => {
     const countryCode = item.number.slice(0, item.number.length - 10);
     const phone = item.number.slice(-10);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('resendMessage', { detail: { countryCode, phone, message: item.message } }));
-    }
+    window.dispatchEvent(new CustomEvent('resendMessage', { detail: { countryCode, phone, message: item.message } }));
   };
 
   const handleClearHistory = () => {
     setHistory([]);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('waHistory');
-    }
+    localStorage.removeItem('waHistory');
     setCurrentSlide(0);
   };
 
   const handleSlide = (direction) => {
-    if (direction === 'next' && currentSlide < 10 - (window.innerWidth >= 768 ? 3 : 1)) {
+    if (direction === 'next' && currentSlide < history.length - (window.innerWidth >= 768 ? 3 : 1)) {
       setCurrentSlide(currentSlide + 1);
     } else if (direction === 'prev' && currentSlide > 0) {
       setCurrentSlide(currentSlide - 1);
     }
   };
-
-  // Create 10 placeholders
-  const placeholders = Array(10).fill(null).map((_, index) => ({
-    id: `placeholder-${index}`,
-    number: 'N/A',
-    message: language === 'id' ? 'Belum ada pesan' : 'No message yet',
-    isPlaceholder: true,
-  }));
-
-  const displayHistory = [...history, ...placeholders].slice(0, 10);
 
   return (
     <main className="bg-[#F5F6F5]">
@@ -158,27 +140,27 @@ export default function MainContent({ language }) {
           >
             {content[language].history.subtitle}
           </motion.p>
-          <div className="relative">
-            <div className="flex overflow-hidden" ref={sliderRef}>
-              <motion.div
-                className="flex"
-                animate={{ x: `-${currentSlide * (100 / (window.innerWidth >= 768 ? 3 : 1))}%` }}
-                transition={{ duration: 0.5 }}
-              >
-                {displayHistory.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    className="flex-shrink-0 w-full md:w-1/3 px-4"
-                    whileHover={{ scale: item.isPlaceholder ? 1 : 1.05, boxShadow: item.isPlaceholder ? 'none' : '0 8px 16px rgba(0, 0, 0, 0.1)' }}
-                  >
-                    <div
-                      className={`p-6 rounded-xl bg-white shadow-lg border ${item.isPlaceholder ? 'border-dashed border-[#D1D7DB] opacity-50' : 'border-[#D1D7DB]'} h-80 w-full max-w-md flex flex-col justify-between`}
+          {history.length === 0 ? (
+            <p className="text-[#005C4B]">{content[language].history.noHistory}</p>
+          ) : (
+            <div className="relative">
+              <div className="flex overflow-hidden" ref={sliderRef}>
+                <motion.div
+                  className="flex"
+                  animate={{ x: `-${currentSlide * (100 / (window.innerWidth >= 768 ? 3 : 1))}%` }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {history.map((item) => (
+                    <motion.div
+                      key={item.id}
+                      className="flex-shrink-0 w-full md:w-1/3 px-4"
+                      whileHover={{ scale: 1.05, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)' }}
                     >
-                      <div>
-                        <p className="text-[#005C4B] font-medium">{item.number}</p>
-                        <p className="text-[#005C4B] mt-2 line-clamp-3">{item.message}</p>
-                      </div>
-                      {!item.isPlaceholder && (
+                      <div className="p-6 rounded-xl bg-white shadow-lg border border-[#D1D7DB] h-64 w-full flex flex-col justify-between">
+                        <div>
+                          <p className="text-[#005C4B] font-medium">{item.number}</p>
+                          <p className="text-[#005C4B] mt-2 line-clamp-3">{item.message}</p>
+                        </div>
                         <div className="mt-4 flex space-x-2 justify-center">
                           <motion.button
                             whileHover={{ scale: 1.1 }}
@@ -199,33 +181,35 @@ export default function MainContent({ language }) {
                             <IoSendSharp />
                           </motion.button>
                         </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+              {history.length > (window.innerWidth >= 768 ? 3 : 1) && (
+                <div className="flex justify-center space-x-4 mt-6">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleSlide('prev')}
+                    className="p-2 bg-[#005C4B] text-white rounded-full disabled:opacity-50"
+                    disabled={currentSlide === 0}
+                  >
+                    <IoChevronBack />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleSlide('next')}
+                    className="p-2 bg-[#005C4B] text-white rounded-full disabled:opacity-50"
+                    disabled={currentSlide >= history.length - (window.innerWidth >= 768 ? 3 : 1)}
+                  >
+                    <IoChevronForward />
+                  </motion.button>
+                </div>
+              )}
             </div>
-            <div className="flex justify-center space-x-4 mt-6">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleSlide('prev')}
-                className="p-2 bg-[#005C4B] text-white rounded-full disabled:opacity-50"
-                disabled={currentSlide === 0}
-              >
-                <IoChevronBack />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleSlide('next')}
-                className="p-2 bg-[#005C4B] text-white rounded-full disabled:opacity-50"
-                disabled={currentSlide >= 10 - (window.innerWidth >= 768 ? 3 : 1)}
-              >
-                <IoChevronForward />
-              </motion.button>
-            </div>
-          </div>
+          )}
           {history.length > 0 && (
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
@@ -249,7 +233,7 @@ export default function MainContent({ language }) {
         className="min-h-[70vh] flex items-center justify-center py-16 px-4 bg-[#F5F6F5]"
         id="guide"
       >
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
@@ -273,26 +257,31 @@ export default function MainContent({ language }) {
           >
             {content[language].guide.subtitle}
           </motion.p>
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {content[language].guide.steps.map((step, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.05, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)' }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
-                className="flex items-center space-x-4 text-left bg-white rounded-lg p-4 shadow-md border border-[#D1D7DB]"
+                className="p-6 rounded-xl bg-white shadow-lg border border-[#D1D7DB] flex items-start space-x-4"
               >
-                <span className="inline-block w-10 h-10 bg-[#005C4B] text-white rounded-full text-center leading-10 font-bold text-xl">
-                  {index + 1}
-                </span>
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="text-2xl text-[#005C4B]"
-                >
-                  {step.icon}
-                </motion.div>
-                <p className="text-[#005C4B] flex-1">{step.text}</p>
+                <div className="flex-shrink-0">
+                  <span className="inline-block w-8 h-8 bg-[#005C4B] text-white rounded-full text-center leading-8 font-bold">
+                    {index + 1}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="text-3xl text-[#005C4B]"
+                  >
+                    {step.icon}
+                  </motion.div>
+                  <p className="text-[#005C4B]">{step.text}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -308,16 +297,11 @@ export default function MainContent({ language }) {
         className="min-h-[70vh] flex items-center justify-center py-16 px-4 bg-[#F5F6F5]"
         id="about"
       >
-        <motion.div
-          initial={{ y: 50 }}
-          whileInView={{ y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-xl mx-auto text-center bg-gradient-to-br from-white to-[#E8ECEF] rounded-2xl shadow-2xl p-10"
-        >
+        <div className="max-w-lg mx-auto text-center bg-white/90 rounded-xl shadow-2xl p-8">
           <motion.div
-            animate={{ scale: [1, 1.15, 1], rotate: [0, 3, -3, 0] }}
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 3 }}
-            className="text-8xl text-[#005C4B] mb-6 mx-auto"
+            className="text-6xl text-[#005C4B] mb-6 mx-auto"
           >
             <IoInformationCircle />
           </motion.div>
@@ -325,7 +309,7 @@ export default function MainContent({ language }) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-[#005C4B] mb-4 font-sans"
+            className="text-3xl md:text-4xl font-bold text-[#005C4B] mb-4"
           >
             {content[language].about.title}
           </motion.h2>
@@ -333,7 +317,7 @@ export default function MainContent({ language }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-[#005C4B] mb-4 font-sans"
+            className="text-base text-[#005C4B] mb-4"
           >
             {content[language].about.subtitle}
           </motion.p>
@@ -341,7 +325,7 @@ export default function MainContent({ language }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-base text-[#005C4B] mb-8 font-sans leading-relaxed"
+            className="text-[#005C4B] mb-8"
           >
             {content[language].about.desc}
           </motion.p>
@@ -349,14 +333,14 @@ export default function MainContent({ language }) {
             href="https://aibiz.id"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.1, boxShadow: '0 8px 20px rgba(0, 92, 75, 0.4)' }}
+            whileHover={{ scale: 1.05, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
             whileTap={{ scale: 0.95 }}
-            className="inline-block px-8 py-4 bg-[#005C4B] text-white rounded-full font-medium font-sans text-lg hover:bg-[#004238] flex items-center justify-center space-x-2 transition-all duration-300"
+            className="inline-block px-6 py-3 bg-[#005C4B] text-white rounded-lg font-medium hover:bg-[#004238] flex items-center justify-center space-x-2"
           >
             <IoSendSharp />
             <span>{content[language].about.cta}</span>
           </motion.a>
-        </motion.div>
+        </div>
       </motion.section>
     </main>
   );
