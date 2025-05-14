@@ -68,7 +68,7 @@ export default function MainContent({ language }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef(null);
 
-  // Inisialisasi 10 placeholder riwayat
+  // Initialize 10 placeholder history items
   const placeholderHistory = Array(10).fill().map((_, index) => ({
     id: `placeholder-${index}`,
     number: content[language].history.noHistory,
@@ -120,69 +120,58 @@ export default function MainContent({ language }) {
   };
 
   return (
-    <main className="bg-[#F5F6F5]">
+    <main className="bg-[var(--whatsapp-cream)]">
       {/* History Section */}
       <motion.section
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="min-h-[70vh] flex items-center justify-center py-16 px-4 bg-[#E8F0E6] border-t-2 border-b-2 border-[#D1D7DB]"
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="py-16 px-4 bg-gradient-to-br from-[var(--hero-gradient-start)] to-[var(--hero-gradient-end)] text-white"
         id="history"
       >
-        <div className="max-w-6xl mx-auto text-center">
-          <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="text-5xl text-[#005C4B] mb-4 mx-auto"
-          >
-            <IoChatbubblesSharp />
-          </motion.div>
-          <motion.h2
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold text-[#005C4B] mb-4"
-          >
-            {content[language].history.title}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-base text-[#005C4B] mb-8"
-          >
-            {content[language].history.subtitle}
-          </motion.p>
+        <div className="container">
+          <div className="text-center mb-12">
+            <motion.div
+              className="chat-bubble mx-auto text-4xl mb-4"
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            >
+              <IoChatbubblesSharp />
+            </motion.div>
+            <h2 className="section-heading">{content[language].history.title}</h2>
+            <p className="section-subheading">{content[language].history.subtitle}</p>
+          </div>
           <div className="relative">
-            <div className="flex overflow-hidden" ref={sliderRef}>
+            <div className="overflow-hidden">
               <motion.div
                 className="flex"
                 animate={{ x: `-${currentSlide * (100 / (window.innerWidth >= 768 ? 3 : 1))}%` }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
               >
                 {displayHistory.map((item) => (
                   <motion.div
                     key={item.id}
                     className="flex-shrink-0 w-full md:w-1/3 px-4"
-                    whileHover={{ scale: item.isPlaceholder ? 1 : 1.05, boxShadow: item.isPlaceholder ? 'none' : '0 8px 16px rgba(0, 0, 0, 0.1)' }}
+                    whileHover={{ scale: item.isPlaceholder ? 1 : 1.02 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="p-6 rounded-xl bg-white shadow-lg border border-[#D1D7DB] h-64 w-full flex flex-col justify-between">
+                    <div className="card h-64 flex flex-col justify-between">
                       <div>
-                        <p className={`text-[#005C4B] font-medium ${item.isPlaceholder ? 'opacity-50' : ''}`}>
+                        <p className={`font-semibold text-[var(--whatsapp-dark-green)] ${item.isPlaceholder ? 'opacity-50' : ''}`}>
                           {item.number}
                         </p>
-                        <p className={`text-[#005C4B] mt-2 line-clamp-3 ${item.isPlaceholder ? 'opacity-50' : ''}`}>
+                        <p className={`mt-2 text-sm text-[var(--whatsapp-dark-green)] line-clamp-3 ${item.isPlaceholder ? 'opacity-50' : ''}`}>
                           {item.message}
                         </p>
                       </div>
                       {!item.isPlaceholder && (
-                        <div className="mt-4 flex space-x-2 justify-center">
+                        <div className="mt-4 flex space-x-3 justify-center">
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleCopy(item)}
-                            className="p-2 bg-[#005C4B] text-white rounded-lg"
+                            className="p-2 bg-[var(--whatsapp-dark-green)] text-white rounded-full hover:bg-[#004238]"
                             title={content[language].history.copy}
                           >
                             <IoCopyOutline />
@@ -191,7 +180,7 @@ export default function MainContent({ language }) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleResend(item)}
-                            className="p-2 bg-[#005C4B] text-white rounded-lg"
+                            className="p-2 bg-[var(--whatsapp-dark-green)] text-white rounded-full hover:bg-[#004238]"
                             title={content[language].history.resend}
                           >
                             <IoSendSharp />
@@ -203,12 +192,12 @@ export default function MainContent({ language }) {
                 ))}
               </motion.div>
             </div>
-            <div className="flex justify-center space-x-4 mt-6">
+            <div className="flex justify-center space-x-4 mt-8">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSlide('prev')}
-                className="p-2 bg-[#005C4B] text-white rounded-full disabled:opacity-50"
+                className="p-3 bg-[var(--whatsapp-dark-green)] text-white rounded-full disabled:opacity-50"
                 disabled={currentSlide === 0}
               >
                 <IoChevronBack />
@@ -217,7 +206,7 @@ export default function MainContent({ language }) {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSlide('next')}
-                className="p-2 bg-[#005C4B] text-white rounded-full disabled:opacity-50"
+                className="p-3 bg-[var(--whatsapp-dark-green)] text-white rounded-full disabled:opacity-50"
                 disabled={currentSlide >= displayHistory.length - (window.innerWidth >= 768 ? 3 : 1)}
               >
                 <IoChevronForward />
@@ -226,10 +215,10 @@ export default function MainContent({ language }) {
           </div>
           {history.length > 0 && (
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleClearHistory}
-              className="mt-8 mx-auto block px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 flex items-center justify-center space-x-2"
+              className="btn-primary mt-8 mx-auto flex items-center space-x-2"
             >
               <IoTrashOutline />
               <span>{content[language].history.clear}</span>
@@ -240,115 +229,74 @@ export default function MainContent({ language }) {
 
       {/* Guide Section */}
       <motion.section
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="min-h-[70vh] flex items-center justify-center py-16 px-4 bg-[#F5F6F5] border-b-2 border-[#D1D7DB]"
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="py-16 px-4 pattern-usecases text-white"
         id="guide"
       >
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="text-5xl text-[#005C4B] mb-4 mx-auto"
-          >
-            <IoBookSharp />
-          </motion.div>
-          <motion.h2
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold text-[#005C4B] mb-4"
-          >
-            {content[language].guide.title}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-base text-[#005C4B] mb-8"
-          >
-            {content[language].guide.subtitle}
-          </motion.p>
-          <ul className="space-y-4 text-left max-w-2xl mx-auto">
+        <div className="container">
+          <div className="text-center mb-12">
+            <motion.div
+              className="chat-bubble mx-auto text-4xl mb-4"
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            >
+              <IoBookSharp />
+            </motion.div>
+            <h2 className="section-heading">{content[language].guide.title}</h2>
+            <p className="section-subheading">{content[language].guide.subtitle}</p>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-6">
             {content[language].guide.steps.map((step, index) => (
-              <motion.li
+              <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md border border-[#D1D7DB]"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="card flex items-start space-x-4"
               >
-                <span className="inline-block w-8 h-8 bg-[#005C4B] text-white rounded-full text-center leading-8 font-bold">
+                <span className="flex-shrink-0 w-10 h-10 bg-[var(--whatsapp-dark-green)] text-white rounded-full flex items-center justify-center font-bold">
                   {index + 1}
                 </span>
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="text-2xl text-[#005C4B]"
-                >
-                  {step.icon}
-                </motion.div>
-                <p className="text-[#005C4B]">{step.text}</p>
-              </motion.li>
+                <div className="text-2xl text-[var(--whatsapp-dark-green)]">{step.icon}</div>
+                <p className="text-[var(--whatsapp-dark-green)]">{step.text}</p>
+              </motion.div>
             ))}
-          </ul>
+          </div>
         </div>
       </motion.section>
 
       {/* About Section */}
       <motion.section
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="min-h-[70vh] flex items-center justify-center py-16 px-4 bg-[#E6ECE8]"
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="py-16 px-4 bg-gradient-to-br from-[var(--contact-gradient-start)] to-[var(--contact-gradient-end)]"
         id="about"
       >
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="container text-center">
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="text-6xl text-[#005C4B] mb-6 mx-auto"
+            className="chat-bubble mx-auto text-5xl mb-6"
+            animate={{ y: [-10, 10, -10] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
           >
             <IoInformationCircle />
           </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl md:text-5xl font-serif font-bold text-[#00362E] mb-4"
-          >
-            {content[language].about.title}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-lg text-[#4A5A56] mb-6 font-light"
-          >
-            {content[language].about.subtitle}
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-base text-[#4A5A56] mb-8 max-w-2xl mx-auto leading-relaxed"
-          >
+          <h2 className="section-heading text-4xl">{content[language].about.title}</h2>
+          <p className="section-subheading font-light">{content[language].about.subtitle}</p>
+          <p className="mt-6 text-base text-[var(--whatsapp-dark-green)] max-w-2xl mx-auto leading-relaxed">
             {content[language].about.desc}
-          </motion.p>
+          </p>
           <motion.a
             href="https://aibiz.id"
             target="_blank"
             rel="noopener noreferrer"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ scale: 1.05, boxShadow: '0 6px 20px rgba(0, 92, 75, 0.2)' }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="inline-block px-8 py-3 bg-[#005C4B] text-white rounded-full font-medium text-sm uppercase tracking-wide hover:bg-[#004238] flex items-center justify-center space-x-2"
+            className="btn-primary mt-8 inline-flex items-center space-x-2"
           >
             <IoSendSharp />
             <span>{content[language].about.cta}</span>
