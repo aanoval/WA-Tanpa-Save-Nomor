@@ -210,7 +210,7 @@ export default function Header({ language, toggleLanguage, scrolled }) {
             />
             <span className="text-lg font-medium">{language === 'id' ? 'ID' : 'EN'}</span>
           </motion.div>
-          <Link href="https://wa.aibiz.id">
+          <Link href="https://wagen.aibiz.id">
             <motion.button
               whileHover={{ scale: 1.1, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
               whileTap={{ scale: 0.95 }}

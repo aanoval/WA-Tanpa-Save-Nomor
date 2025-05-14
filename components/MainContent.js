@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
-import { IoCopyOutline, IoTrashOutline, IoSendSharp, IoChevronBack, IoChevronForward, IoChatbubblesSharp, IoBookSharp, IoInformationCircle, IoPeopleSharp, IoTimeSharp, IoShieldCheckmarkSharp, IoLogoWhatsapp } from 'react-icons/io5';
+import { IoCopyOutline, IoTrashOutline, IoSendSharp, IoChevronBack, IoChevronForward, IoChatbubblesSharp, IoBookSharp, IoInformationCircle, IoLogoVercel, IoLogoReact, IoLogoNodejs, IoLogoJavascript, IoLogoGithub, IoLogoMeta, IoLogoTux, IoLogoHtml5, IoLogoCss3 } from 'react-icons/io5';
+import { SiNextdotjs, SiTailwindcss } from 'react-icons/si';
 
 const content = {
   id: {
@@ -30,30 +31,8 @@ const content = {
       subtitle: 'Aibiz ID - Penyedia Resmi WhatsApp Business Platform',
       desc: 'Kami adalah penyedia solusi komunikasi berbasis AI untuk bisnis Anda. Dengan WhatsApp Business API, kami membantu Anda mengotomatiskan layanan pelanggan, pemesanan, dan integrasi nomor bisnis dengan aman dan efisien.',
       cta: 'Pelajari Lebih Lanjut',
-      achievements: {
-        title: 'Pencapaian Kami',
-        items: [
-          {
-            title: 'Ratusan Klien',
-            desc: 'Dipercaya oleh ratusan bisnis untuk solusi komunikasi.',
-            icon: <IoPeopleSharp />,
-          },
-          {
-            title: 'Uptime 99%',
-            desc: 'Layanan stabil dengan uptime hampir sempurna.',
-            icon: <IoTimeSharp />,
-          },
-          {
-            title: 'Tech Provider Terverifikasi',
-            desc: 'Penyedia teknologi resmi untuk solusi WhatsApp.',
-            icon: <IoShieldCheckmarkSharp />,
-          },
-          {
-            title: 'API WhatsApp Resmi',
-            desc: 'Penyedia resmi WhatsApp Business API.',
-            icon: <IoLogoWhatsapp />,
-          },
-        ],
+      poweredBy: {
+        title: 'Didukung Oleh',
       },
     },
   },
@@ -84,34 +63,26 @@ const content = {
       subtitle: 'Aibiz ID - Official WhatsApp Business Platform Provider',
       desc: 'We provide AI-driven communication solutions for your business. With WhatsApp Business API, we help you automate customer service, orders, and business number integration securely and efficiently.',
       cta: 'Learn More',
-      achievements: {
-        title: 'Our Achievements',
-        items: [
-          {
-            title: 'Hundreds of Clients',
-            desc: 'Trusted by hundreds of businesses for communication solutions.',
-            icon: <IoPeopleSharp />,
-          },
-          {
-            title: '99% Uptime',
-            desc: 'Stable service with near-perfect uptime.',
-            icon: <IoTimeSharp />,
-          },
-          {
-            title: 'Verified Tech Provider',
-            desc: 'Official technology provider for WhatsApp solutions.',
-            icon: <IoShieldCheckmarkSharp />,
-          },
-          {
-            title: 'Official WhatsApp API',
-            desc: 'Official WhatsApp Business API provider.',
-            icon: <IoLogoWhatsapp />,
-          },
-        ],
+      poweredBy: {
+        title: 'Powered By',
       },
     },
   },
 };
+
+// Tech stack icons for the carousel
+const techStack = [
+  { icon: <IoLogoMeta />, name: 'Meta' },
+  { icon: <SiNextdotjs />, name: 'Next.js' },
+  { icon: <IoLogoVercel />, name: 'Vercel' },
+  { icon: <IoLogoReact />, name: 'React' },
+  { icon: <SiTailwindcss />, name: 'Tailwind CSS' },
+  { icon: <IoLogoNodejs />, name: 'Node.js' },
+  { icon: <IoLogoJavascript />, name: 'JavaScript' },
+  { icon: <IoLogoGithub />, name: 'GitHub' },
+  { icon: <IoLogoHtml5 />, name: 'HTML5' },
+  { icon: <IoLogoCss3 />, name: 'CSS3' },
+];
 
 export default function MainContent({ language }) {
   const [history, setHistory] = useState([]);
@@ -297,7 +268,7 @@ export default function MainContent({ language }) {
         id="guide"
       >
         <div className="container">
-          <div className="text-center mb Ární12">
+          <div className="text-center mb-12">
             <motion.div
               className="chat-bubble mx-auto text-4xl mb-4"
               animate={{ y: [-10, 10, -10] }}
@@ -328,7 +299,7 @@ export default function MainContent({ language }) {
         </div>
       </motion.section>
 
- {/* About Section */}
+      {/* About Section */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -361,28 +332,37 @@ export default function MainContent({ language }) {
             <IoSendSharp />
             <span>{content[language].about.cta}</span>
           </motion.a>
-          {/* Achievements Component */}
+          {/* Powered By Carousel */}
           <div className="mt-16">
-            <h3 className="section-heading text-3xl">{content[language].about.achievements.title}</h3>
-            <div className="flex flex-col sm:flex-row justify-center gap-8 mt-8 max-w-5xl mx-auto">
-              {content[language].about.achievements.items.map((achievement, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex flex-col items-center"
-                >
-                  <motion.div
-                    className="chat-bubble text-6xl text-[var(--whatsapp-dark-green)]"
-                    animate={{ y: [-10, 10, -10] }}
-                    transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            <h3 className="section-heading text-3xl">{content[language].about.poweredBy.title}</h3>
+            <div className="overflow-hidden mt-8">
+              <motion.div
+                className="flex"
+                animate={isClient ? { x: ['0%', '-100%'] } : { x: '0%' }}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: 'loop',
+                    duration: 30,
+                    ease: 'linear',
+                  },
+                }}
+              >
+                {[...techStack, ...techStack].map((tech, index) => (
+                  <div
+                    key={`${tech.name}-${index}`}
+                    className="flex-shrink-0 w-1/3 md:w-1/5 flex justify-center items-center px-6"
                   >
-                    {achievement.icon}
-                  </motion.div>
-                  <p className="mt-4 text-sm text-[var(--whatsapp-dark-green)] max-w-[150px]">{achievement.desc}</p>
-                </motion.div>
-              ))}
+                    <motion.div
+                      className="chat-bubble text-6xl text-[var(--whatsapp-dark-green)]"
+                      animate={{ y: [-10, 10, -10] }}
+                      transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                    >
+                      {tech.icon}
+                    </motion.div>
+                  </div>
+                ))}
+              </motion.div>
             </div>
           </div>
         </div>
