@@ -31,36 +31,37 @@ const content = {
       desc: 'Kami adalah mitra terpercaya untuk bisnis yang ingin mengoptimalkan komunikasi pelanggan melalui WhatsApp. Dengan solusi AI canggih, kami menyediakan Agent AI WhatsApp untuk layanan pelanggan otomatis, pemesanan instan, dan integrasi nomor bisnis yang mulus. Sebagai penyedia resmi WhatsApp Business API, kami menjamin keamanan, keandalan, dan pengalaman komunikasi yang luar biasa untuk bisnis Anda.',
       cta: 'Jelajahi Solusi Kami',
     },
-    en: {
-      history: {
-        title: 'Message History',
-        subtitle: 'View up to 10 recent messages you sent.',
-        noHistory: 'No message history yet.',
-        copy: 'Copy',
-        resend: 'Resend',
-        clear: 'Clear History',
-        prev: 'Previous',
-        next: 'Next',
-      },
-      guide: {
-        title: 'Usage Guide',
-        subtitle: 'Follow these steps to send messages without saving the number:',
-        steps: [
-          { text: 'Select the phone code from the dropdown (default: 62 for Indonesia).', icon: <IoSendSharp /> },
-          { text: 'Enter the destination phone number without the phone code (e.g., 858123131313).', icon: <IoSendSharp /> },
-          { text: 'Write the message you want to send in the message field.', icon: <IoSendSharp /> },
-          { text: 'Click "Send Message" to open WhatsApp with the number and message filled in.', icon: <IoSendSharp /> },
-          { text: 'Your message history will be saved locally and can be viewed in the history section.', icon: <IoSendSharp /> },
-        ],
-      },
-      about: {
-        title: 'About Us',
-        subtitle: 'Aibiz ID - Official WhatsApp Business Platform Provider',
-        desc: 'We are a trusted partner for businesses looking to optimize customer communication via WhatsApp. With advanced AI solutions, we provide WhatsApp AI Agents for automated customer service, instant ordering, and seamless business number integration. As an official WhatsApp Business API provider, we guarantee security, reliability, and an exceptional communication experience for your business.',
-        cta: 'Explore Our Solutions',
-      },
+  },
+  en: {
+    history: {
+      title: 'Message History',
+      subtitle: 'View up to 10 recent messages you sent.',
+      noHistory: 'No message history yet.',
+      copy: 'Copy',
+      resend: 'Resend',
+      clear: 'Clear History',
+      prev: 'Previous',
+      next: 'Next',
     },
-  };
+    guide: {
+      title: 'Usage Guide',
+      subtitle: 'Follow these steps to send messages without saving the number:',
+      steps: [
+        { text: 'Select the phone code from the dropdown (default: 62 for Indonesia).', icon: <IoSendSharp /> },
+        { text: 'Enter the destination phone number without the phone code (e.g., 858123131313).', icon: <IoSendSharp /> },
+        { text: 'Write the message you want to send in the message field.', icon: <IoSendSharp /> },
+        { text: 'Click "Send Message" to open WhatsApp with the number and message filled in.', icon: <IoSendSharp /> },
+        { text: 'Your message history will be saved locally and can be viewed in the history section.', icon: <IoSendSharp /> },
+      ],
+    },
+    about: {
+      title: 'About Us',
+      subtitle: 'Aibiz ID - Official WhatsApp Business Platform Provider',
+      desc: 'We are a trusted partner for businesses looking to optimize customer communication via WhatsApp. With advanced AI solutions, we provide WhatsApp AI Agents for automated customer service, instant ordering, and seamless business number integration. As an official WhatsApp Business API provider, we guarantee security, reliability, and an exceptional communication experience for your business.',
+      cta: 'Explore Our Solutions',
+    },
+  },
+};
 
 export default function MainContent({ language }) {
   const [history, setHistory] = useState([]);

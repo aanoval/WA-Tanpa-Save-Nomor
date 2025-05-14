@@ -2,12 +2,12 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
 import Link from 'next/link';
-import countryTelephoneCode from 'country-telephone-code';
+import { getCountryCallingCode, getCountries } from 'libphonenumber-js';
 
 export default function Header({ language, toggleLanguage, scrolled }) {
   const content = {
     id: {
-      cta: ']-[Mulai Sekarang',
+      cta: 'Mulai Sekarang',
       form: {
         title: 'Kirim Pesan WhatsApp',
         subtitle: 'Masukkan nomor dan pesan untuk kirim langsung.',
@@ -38,10 +38,10 @@ export default function Header({ language, toggleLanguage, scrolled }) {
   const [formError, setFormError] = useState('');
   const canvasRef = useRef(null);
 
-  // Sort countries to prioritize Indonesia
-  const countries = Object.entries(countryTelephoneCode).map(([name, code]) => ({
-    label: name.charAt(0).toUpperCase() + name.slice(1),
-    value: code.replace('+', ''),
+  // Get country codes and sort to prioritize Indonesia
+  const countries = getCountries().map((code) => ({
+    label: new Intl.DisplayNames([language === 'id' ? 'id' : 'en'], { type: 'region' }).of(code),
+    value: getCountryCallingCode(code),
   })).sort((a, b) => (a.value === '62' ? -1 : b.value === '62' ? 1 : a.label.localeCompare(b.label)));
 
   // Bubble Animation
