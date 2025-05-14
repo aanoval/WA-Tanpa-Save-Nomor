@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
-import { IoCopyOutline, IoTrashOutline, IoSendSharp, IoChevronBack, IoChevronForward, IoChatbubblesSharp, IoBookSharp, IoInformationCircle } from 'react-icons/io5';
+import { IoCopyOutline, IoTrashOutline, IoSendSharp, IoChevronBack, IoChevronForward, IoChatbubblesSharp, IoBookSharp, IoInformationCircle, IoPeopleSharp, IoTimeSharp, IoShieldCheckmarkSharp, IoLogoWhatsapp } from 'react-icons/io5';
 
 const content = {
   id: {
@@ -30,6 +30,31 @@ const content = {
       subtitle: 'Aibiz ID - Penyedia Resmi WhatsApp Business Platform',
       desc: 'Kami adalah penyedia solusi komunikasi berbasis AI untuk bisnis Anda. Dengan WhatsApp Business API, kami membantu Anda mengotomatiskan layanan pelanggan, pemesanan, dan integrasi nomor bisnis dengan aman dan efisien.',
       cta: 'Pelajari Lebih Lanjut',
+      achievements: {
+        title: 'Pencapaian Kami',
+        items: [
+          {
+            title: 'Ratusan Klien',
+            desc: 'Dipercaya oleh ratusan bisnis untuk solusi komunikasi.',
+            icon: <IoPeopleSharp />,
+          },
+          {
+            title: 'Uptime 99%',
+            desc: 'Layanan stabil dengan uptime hampir sempurna.',
+            icon: <IoTimeSharp />,
+          },
+          {
+            title: 'Tech Provider Terverifikasi',
+            desc: 'Penyedia teknologi resmi untuk solusi WhatsApp.',
+            icon: <IoShieldCheckmarkSharp />,
+          },
+          {
+            title: 'API WhatsApp Resmi',
+            desc: 'Penyedia resmi WhatsApp Business API.',
+            icon: <IoLogoWhatsapp />,
+          },
+        ],
+      },
     },
   },
   en: {
@@ -59,6 +84,31 @@ const content = {
       subtitle: 'Aibiz ID - Official WhatsApp Business Platform Provider',
       desc: 'We provide AI-driven communication solutions for your business. With WhatsApp Business API, we help you automate customer service, orders, and business number integration securely and efficiently.',
       cta: 'Learn More',
+      achievements: {
+        title: 'Our Achievements',
+        items: [
+          {
+            title: 'Hundreds of Clients',
+            desc: 'Trusted by hundreds of businesses for communication solutions.',
+            icon: <IoPeopleSharp />,
+          },
+          {
+            title: '99% Uptime',
+            desc: 'Stable service with near-perfect uptime.',
+            icon: <IoTimeSharp />,
+          },
+          {
+            title: 'Verified Tech Provider',
+            desc: 'Official technology provider for WhatsApp solutions.',
+            icon: <IoShieldCheckmarkSharp />,
+          },
+          {
+            title: 'Official WhatsApp API',
+            desc: 'Official WhatsApp Business API provider.',
+            icon: <IoLogoWhatsapp />,
+          },
+        ],
+      },
     },
   },
 };
@@ -137,7 +187,7 @@ export default function MainContent({ language }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="py-16 px-4 bg-gradient-to-br from-[var(--hero-gradient-start)] to-[var(--hero-gradient-end)] text-white"
+        className="py-16 px-4 bg-[var(--whatsapp-cream)] text-[var(--whatsapp-dark-green)]"
         id="history"
       >
         <div className="container">
@@ -311,6 +361,31 @@ export default function MainContent({ language }) {
             <IoSendSharp />
             <span>{content[language].about.cta}</span>
           </motion.a>
+          {/* Achievements Component */}
+          <div className="mt-16">
+            <h3 className="section-heading text-3xl">{content[language].about.achievements.title}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 max-w-5xl mx-auto">
+              {content[language].about.achvements.items.map((achievement, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="card flex flex-col items-center text-center p-8"
+                >
+                  <motion.div
+                    className="chat-bubble text-5xl mb-4 text-[var(--whatsapp-dark-green)]"
+                    animate={{ y: [-10, 10, -10] }}
+                    transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                  >
+                    {achievement.icon}
+                  </motion.div>
+                  <h4 className="text-xl font-semibold text-[var(--whatsapp-dark-green)]">{achievement.title}</h4>
+                  <p className="mt-2 text-sm text-[var(--whatsapp-dark-green)]">{achievement.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </motion.section>
     </main>
