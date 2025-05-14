@@ -3,6 +3,97 @@ import { useState, useEffect, useRef } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
 import Link from 'next/link';
 import { getCountryCallingCode, getCountries } from 'libphonenumber-js';
+import dynamic from 'next/dynamic';
+
+// Komponen Canvas hanya dimuat di sisi klien
+const DynamicCanvas = dynamic(
+  () => {
+    return Promise.resolve(({ canvasRef }) => {
+      useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let bubbles = [];
+        let mouseX = 0;
+        let mouseY = 0;
+
+        const resizeCanvas = () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        };
+
+        const createBubble = () => ({
+          x: Math.random() * canvas.width,
+          y: canvas.height + 50,
+          radius: Math.random() * 20 + 10,
+          speed: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 2,
+          color: `rgba(76, 175, 80, ${Math.random() * 0.5 + 0.3})`,
+        });
+
+        const initBubbles = () => {
+          bubbles = [];
+          for (let i = 0; i < 20; i++) {
+            bubbles.push(createBubble());
+          }
+        };
+
+        const animate = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          bubbles.forEach((bubble) => {
+            const distX = mouseX - bubble.x;
+            const distY = mouseY - bubble.y;
+            const distance = Math.sqrt(distX * distX + distY * distY);
+
+            if (distance < 100) {
+              bubble.dx += distX * 0.02;
+              bubble.dy = -bubble.speed + distY * 0.02;
+            } else {
+              bubble.dy = -bubble.speed;
+            }
+
+            bubble.x += bubble.dx;
+            bubble.y += bubble.dy;
+
+            if (bubble.y < -bubble.radius) {
+              bubble.y = canvas.height + bubble.radius;
+              bubble.x = Math.random() * canvas.width;
+              bubble.dx = (Math.random() - 0.5) * 2;
+            }
+
+            ctx.beginPath();
+            ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+            ctx.fillStyle = bubble.color;
+            ctx.fill();
+          });
+
+          requestAnimationFrame(animate);
+        };
+
+        resizeCanvas();
+        initBubbles();
+        animate();
+
+        const handleMouseMove = (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+          window.removeEventListener('resize', resizeCanvas);
+          window.removeEventListener('mousemove', handleMouseMove);
+        };
+      }, []);
+
+      return <canvas ref={canvasRef} className="absolute inset-0 z-0" />;
+    });
+  },
+  { ssr: false }
+);
 
 export default function Header({ language, toggleLanguage, scrolled }) {
   const content = {
@@ -44,85 +135,6 @@ export default function Header({ language, toggleLanguage, scrolled }) {
     value: getCountryCallingCode(code),
   })).sort((a, b) => (a.value === '62' ? -1 : b.value === '62' ? 1 : a.label.localeCompare(b.label)));
 
-  // Bubble Animation
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let bubbles = [];
-    let mouseX = 0;
-    let mouseY = 0;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    const createBubble = () => ({
-      x: Math.random() * canvas.width,
-      y: canvas.height + 50,
-      radius: Math.random() * 20 + 10,
-      speed: Math.random() * 2 + 1,
-      dx: (Math.random() - 0.5) * 2,
-      color: `rgba(76, 175, 80, ${Math.random() * 0.5 + 0.3})`,
-    });
-
-    const initBubbles = () => {
-      bubbles = [];
-      for (let i = 0; i < 20; i++) {
-        bubbles.push(createBubble());
-      }
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      bubbles.forEach((bubble) => {
-        const distX = mouseX - bubble.x;
-        const distY = mouseY - bubble.y;
-        const distance = Math.sqrt(distX * distX + distY * distY);
-
-        if (distance < 100) {
-          bubble.dx += distX * 0.02;
-          bubble.dy = -bubble.speed + distY * 0.02;
-        } else {
-          bubble.dy = -bubble.speed;
-        }
-
-        bubble.x += bubble.dx;
-        bubble.y += bubble.dy;
-
-        if (bubble.y < -bubble.radius) {
-          bubble.y = canvas.height + bubble.radius;
-          bubble.x = Math.random() * canvas.width;
-          bubble.dx = (Math.random() - 0.5) * 2;
-        }
-
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
-        ctx.fillStyle = bubble.color;
-        ctx.fill();
-      });
-
-      requestAnimationFrame(animate);
-    };
-
-    resizeCanvas();
-    initBubbles();
-    animate();
-
-    const handleMouseMove = (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
   const handleFormChange = (e) => {
     const { id, value } = e.target;
     if (id === 'phone') {
@@ -157,13 +169,15 @@ export default function Header({ language, toggleLanguage, scrolled }) {
       message,
       timestamp: new Date().toISOString(),
     };
-    const existingHistory = JSON.parse(localStorage.getItem('waHistory') || '[]');
-    const updatedHistory = [newHistory, ...existingHistory].slice(0, 10);
-    localStorage.setItem('waHistory', JSON.stringify(updatedHistory));
-    window.open(
-      `https://api.whatsapp.com/send/?phone=${fullNumber}&text=${encodedMessage}&type=phone_number&app_absent=0`,
-      '_blank'
-    );
+    if (typeof window !== 'undefined') {
+      const existingHistory = JSON.parse(localStorage.getItem('waHistory') || '[]');
+      const updatedHistory = [newHistory, ...existingHistory].slice(0, 10);
+      localStorage.setItem('waHistory', JSON.stringify(updatedHistory));
+      window.open(
+        `https://api.whatsapp.com/send/?phone=${fullNumber}&text=${encodedMessage}&type=phone_number&app_absent=0`,
+        '_blank'
+      );
+    }
     setFormData({ countryCode: '62', phone: '', message: '' });
   };
 
@@ -175,7 +189,7 @@ export default function Header({ language, toggleLanguage, scrolled }) {
       className="min-h-[80vh] relative flex flex-col pt-20 px-4 bg-gradient-to-br from-[#005C4B] to-[#4CAF50] text-white"
       id="form"
     >
-      <canvas ref={canvasRef} className="absolute inset-0 z-0" />
+      <DynamicCanvas canvasRef={canvasRef} />
       <nav
         className={`fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center ${scrolled ? 'bg-[#4CAF50]/90 backdrop-blur-md' : 'bg-transparent'}`}
       >

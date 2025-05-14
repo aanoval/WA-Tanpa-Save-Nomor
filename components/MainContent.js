@@ -70,30 +70,38 @@ export default function MainContent({ language }) {
 
   // History Storage
   useEffect(() => {
-    const savedHistory = localStorage.getItem('waHistory');
-    if (savedHistory) {
-      const parsedHistory = JSON.parse(savedHistory).slice(0, 10);
-      setHistory(parsedHistory);
-      if (parsedHistory.length < 4) {
-        setCurrentSlide(Math.floor(parsedHistory.length / 2));
+    if (typeof window !== 'undefined') {
+      const savedHistory = localStorage.getItem('waHistory');
+      if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory).slice(0, 10);
+        setHistory(parsedHistory);
+        if (parsedHistory.length < 4) {
+          setCurrentSlide(Math.floor(parsedHistory.length / 2));
+        }
       }
     }
   }, []);
 
   const handleCopy = (item) => {
-    navigator.clipboard.writeText(`Number: ${item.number}\nMessage: ${item.message}`);
-    alert(language === 'id' ? 'Teks disalin ke clipboard!' : 'Text copied to clipboard!');
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(`Number: ${item.number}\nMessage: ${item.message}`);
+      alert(language === 'id' ? 'Teks disalin ke clipboard!' : 'Text copied to clipboard!');
+    }
   };
 
   const handleResend = (item) => {
     const countryCode = item.number.slice(0, item.number.length - 10);
     const phone = item.number.slice(-10);
-    window.dispatchEvent(new CustomEvent('resendMessage', { detail: { countryCode, phone, message: item.message } }));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('resendMessage', { detail: { countryCode, phone, message: item.message } }));
+    }
   };
 
   const handleClearHistory = () => {
     setHistory([]);
-    localStorage.removeItem('waHistory');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('waHistory');
+    }
     setCurrentSlide(0);
   };
 
