@@ -10,6 +10,8 @@ const content = {
       subtitle: 'Lihat hingga 10 pesan terakhir yang Anda kirim.',
       noHistory: 'Belum ada pesan.',
       copy: 'Salin',
+      copyNumber: 'Salin Nomor',
+      copyMessage: 'Salin Pesan',
       resend: 'Kirim Ulang',
       clear: 'Hapus Riwayat',
       prev: 'Sebelumnya',
@@ -42,6 +44,8 @@ const content = {
       subtitle: 'View up to 10 recent messages you sent.',
       noHistory: 'No messages yet.',
       copy: 'Copy',
+      copyNumber: 'Copy Number',
+      copyMessage: 'Copy Message',
       resend: 'Resend',
       clear: 'Clear History',
       prev: 'Previous',
@@ -122,15 +126,34 @@ export default function MainContent({ language }) {
 
   const handleCopy = (item) => {
     if (item.isPlaceholder) return;
-    navigator.clipboard.writeText(`Number: ${item.number}\nMessage: ${item.message}`);
-    alert(language === 'id' ? 'Teks disalin ke clipboard!' : 'Text copied to clipboard!');
+    // Prompt user to choose what to copy
+    const choice = prompt(
+      language === 'id'
+        ? 'Pilih yang ingin disalin:\n1. Nomor\n2. Pesan'
+        : 'Choose what to copy:\n1. Number\n2. Message'
+    );
+    if (choice === '1') {
+      navigator.clipboard.writeText(item.number);
+      alert(language === 'id' ? 'Nomor disalin ke clipboard!' : 'Number copied to clipboard!');
+    } else if (choice === '2') {
+      navigator.clipboard.writeText(item.message);
+      alert(language === 'id' ? 'Pesan disalin ke clipboard!' : 'Message copied to clipboard!');
+    }
   };
 
   const handleResend = (item) => {
     if (item.isPlaceholder || typeof window === 'undefined') return;
-    const countryCode = item.number.slice(0, item.number.length - 10);
-    const phone = item.number.slice(-10);
-    window.dispatchEvent(new CustomEvent('resendMessage', { detail: { countryCode, phone, message: item.message } }));
+    // Extract country code and phone number
+    const countryCode = item.number.match(/^\+(\d+)/)?.[1] || '62';
+    const phone = item.number.replace(/^\+\d+/, '');
+    // Dispatch event to populate form
+    window.dispatchEvent(
+      new CustomEvent('resendMessage', {
+        detail: { countryCode, phone, message: item.message },
+      })
+    );
+    // Scroll to form
+    document.getElementById('form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleClearHistory = () => {
@@ -305,7 +328,7 @@ export default function MainContent({ language }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="py-16 px-4 bg-gradient-to-br from-[var(--contact-gradient-start)] to-[var(--contact-gradient-end)]"
+        className="py-16 px-4 bg-gradient-to-br from-[var(--contact-gradient-start)] to-[var(--contact-gradient-end)] relative z-10"
         id="about"
       >
         <div className="container text-center">
@@ -333,9 +356,9 @@ export default function MainContent({ language }) {
             <span>{content[language].about.cta}</span>
           </motion.a>
           {/* Powered By Carousel */}
-          <div className="mt-16">
+          <div className="mt-16 mb-12">
             <h3 className="section-heading text-3xl">{content[language].about.poweredBy.title}</h3>
-            <div className="overflow-hidden mt-8">
+            <div className="overflow-hidden mt-8 relative">
               <motion.div
                 className="flex"
                 animate={isClient ? { x: ['0%', '-100%'] } : { x: '0%' }}
@@ -351,15 +374,16 @@ export default function MainContent({ language }) {
                 {[...techStack, ...techStack].map((tech, index) => (
                   <div
                     key={`${tech.name}-${index}`}
-                    className="flex-shrink-0 w-1/3 md:w-1/5 flex justify-center items-center px-6"
+                    className="flex-shrink-0 w-1/3 md:w-1/5 flex flex-col justify-center items-center px-6"
                   >
                     <motion.div
-                      className="chat-bubble text-6xl text-[var(--whatsapp-dark-green)]"
+                      className="chat-bubble text-6xl text-[var(--whatsapp-dark-green)] mb-2"
                       animate={{ y: [-10, 10, -10] }}
                       transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
                     >
                       {tech.icon}
                     </motion.div>
+                    <span className="text-sm text-[var(--whatsapp-dark-green)]">{tech.name}</span>
                   </div>
                 ))}
               </motion.div>
