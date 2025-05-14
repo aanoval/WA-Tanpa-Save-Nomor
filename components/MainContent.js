@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
-import { IoCopyOutline, IoTrashOutline, IoSendSharp, IoChevronBack, IoChevronForward, IoChatbubblesSharp, IoBookSharp, IoInformationCircle, IoLogoVercel, IoLogoReact, IoLogoNodejs, IoLogoJavascript, IoLogoGithub, IoLogoMeta, IoLogoTux, IoLogoHtml5, IoLogoCss3 } from 'react-icons/io5';
+import { IoCopyOutline, IoTrashOutline, IoSendSharp, IoChevronBack, IoChevronForward, IoChatbubblesSharp, IoBookSharp, IoInformationCircle, IoLogoVercel, IoLogoReact, IoLogoNodejs, IoLogoJavascript, IoLogoGithub, IoLogoWhatsapp, IoLogoHtml5, IoLogoCss3 } from 'react-icons/io5';
 import { SiNextdotjs, SiTailwindcss } from 'react-icons/si';
 
 const content = {
@@ -72,7 +72,7 @@ const content = {
 
 // Tech stack icons for the carousel
 const techStack = [
-  { icon: <IoLogoMeta />, name: 'Meta' },
+  { icon: <IoLogoWhatsapp />, name: 'WhatsApp' },
   { icon: <SiNextdotjs />, name: 'Next.js' },
   { icon: <IoLogoVercel />, name: 'Vercel' },
   { icon: <IoLogoReact />, name: 'React' },
