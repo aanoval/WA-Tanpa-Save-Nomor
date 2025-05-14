@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Colors */
+:root {
+  --whatsapp-cream: #F5F6F5;
+  --whatsapp-dark-green: #005C4B;
+  --whatsapp-light-gray: #D1D7DB;
+  --whatsapp-dark-black: #1C2526;
+  --hero-gradient-start: #005C4B;
+  --hero-gradient-end: #4CAF50;
+  --contact-gradient-start: #A5D6A7;
+  --contact-gradient-end: #FFFFFF;
+}
+
+/* Chat bubble animation for hero */
+@keyframes bubble-float {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-15px) scale(1.1); opacity: 0.9; }
+  100% { transform: translateY(0) scale(1); opacity: 0.6; }
+}
+
+.chat-bubble {
+  position: absolute;
+  background: #FFFFFF;
+  color: #005C4B;
+  border-radius: 15px;
+  padding: 8px 12px;
+  font-size: 14px;
+  pointer-events: none;
+  animation: bubble-float 3s ease-in-out infinite;
+}
+
+/* Slide animation for use cases */
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-slide {
+  display: flex;
+  animation: slide 20s linear infinite;
+}
+
+/* Global styles */
+body {
+  font-family: 'Helvetica Neue', 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--whatsapp-cream);
+  color: var(--whatsapp-dark-green);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Helvetica Neue', 'Poppins', sans-serif;
+  color: var(--whatsapp-dark-green);
+}
+
+/* Smooth transitions */
+a, button, input, textarea {
+  @apply transition-all duration-300;
+}
+
+/* Focus states */
+a:focus, button:focus, input:focus, textarea:focus {
+  @apply outline-none ring-2 ring-green-500;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--whatsapp-dark-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004238;
+}
+
+/* Background patterns with WhatsApp-inspired icons */
+.pattern-usecases {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D1D7DB' fill-opacity='0.15' fill-rule='evenodd'%3E%3Cpath d='M20 20a5 5 0 100-10 5 5 0 000 10zm60 60a5 5 0 100-10 5 5 0 000 10z'/%3E%3Cpath d='M40 30c2.5 0 4.5-2 4.5-4.5s-2-4.5-4.5-4.5-4.5 2-4.5 4.5 2 4.5 4.5 4.5zm20 40c2.5 0 4.5-2 4.5-4.5s-2-4.5-4.5-4.5-4.5 2-4.5 4.5 2 4.5 4.5 4.5z'/%3E%3Cpath d='M30 50c0-2-2-3.5-4-3.5s-4 1.5-4 3.5 2 3.5 4 3.5 4-1.5 4-3.5zm40 0c0-2-2-3.5-4-3.5s-4 1.5-4 3.5 2 3.5 4 3.5 4-1.5 4-3.5z'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--whatsapp-dark-green);
+}
+
+.pattern-contact {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D1D7DB' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='M20 20l10 10-10 10-10-10zM60 60l-10-10 10-10 10 10z'/%3E%3Cpath d='M40 20h10v20H40zM20 60h10v-20H20z'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--whatsapp-dark-green);
+}
+
+/* Custom component classes */
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 focus:ring-2 focus:ring-green-400;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+  }
+
+  .section-heading {
+    @apply text-3xl font-bold text-green-700 text-center;
+  }
+
+  .section-subheading {
+    @apply mt-4 text-lg text-gray-600 text-center;
+  }
+}
