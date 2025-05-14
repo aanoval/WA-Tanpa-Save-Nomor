@@ -328,7 +328,7 @@ export default function MainContent({ language }) {
         </div>
       </motion.section>
 
-      {/* About Section */}
+ {/* About Section */}
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -364,24 +364,23 @@ export default function MainContent({ language }) {
           {/* Achievements Component */}
           <div className="mt-16">
             <h3 className="section-heading text-3xl">{content[language].about.achievements.title}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 max-w-5xl mx-auto">
+            <div className="flex flex-col sm:flex-row justify-center gap-8 mt-8 max-w-5xl mx-auto">
               {content[language].about.achievements.items.map((achievement, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="card flex flex-col items-center text-center p-8"
+                  className="flex flex-col items-center"
                 >
                   <motion.div
-                    className="chat-bubble text-5xl mb-4 text-[var(--whatsapp-dark-green)]"
+                    className="chat-bubble text-6xl text-[var(--whatsapp-dark-green)]"
                     animate={{ y: [-10, 10, -10] }}
                     transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
                   >
                     {achievement.icon}
                   </motion.div>
-                  <h4 className="text-xl font-semibold text-[var(--whatsapp-dark-green)]">{achievement.title}</h4>
-                  <p className="mt-2 text-sm text-[var(--whatsapp-dark-green)]">{achievement.desc}</p>
+                  <p className="mt-4 text-sm text-[var(--whatsapp-dark-green)] max-w-[150px]">{achievement.desc}</p>
                 </motion.div>
               ))}
             </div>
