@@ -54,6 +54,20 @@ export default function Header({ language, toggleLanguage, scrolled }) {
   const otherCountries = countries.filter(country => country.callingCode !== '62');
   const sortedCountries = [indonesia, ...otherCountries];
 
+  // Listen for resendMessage event
+  useEffect(() => {
+    const handleResend = (e) => {
+      const { countryCode, phone, message, autoSubmit } = e.detail;
+      setFormData({ countryCode, phone, message });
+      setFormError('');
+      if (autoSubmit) {
+        setTimeout(() => handleFormSubmit(), 0); // Trigger submission after state update
+      }
+    };
+    window.addEventListener('resendMessage', handleResend);
+    return () => window.removeEventListener('resendMessage', handleResend);
+  }, [formData]); // Include formData to ensure latest state
+
   // Bubble Animation
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -214,7 +228,7 @@ export default function Header({ language, toggleLanguage, scrolled }) {
             <motion.button
               whileHover={{ scale: 1.1, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-[#005C4B] text-white rounded-lg font-medium shadow hover:bg-[#004238] transition-all duration-300"
+              className="px-4 py-2 bg-[#005C4B] text-white rounded-lg font-medium shadow hover:bg-[#004 HAZ238] transition-all duration-300"
             >
               {content[language].cta}
             </motion.button>

@@ -92,6 +92,7 @@ export default function MainContent({ language }) {
   const [history, setHistory] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isClient, setIsClient] = useState(false);
+  const [showCopyOptions, setShowCopyOptions] = useState(null); // Track which item's copy options are shown
   const sliderRef = useRef(null);
 
   // Initialize 10 placeholder history items
@@ -124,21 +125,20 @@ export default function MainContent({ language }) {
 
   const displayHistory = history.length > 0 ? [...history, ...placeholderHistory].slice(0, 10) : placeholderHistory;
 
-  const handleCopy = (item) => {
+  const handleCopy = (item, type) => {
     if (item.isPlaceholder) return;
-    // Prompt user to choose what to copy
-    const choice = prompt(
-      language === 'id'
-        ? 'Pilih yang ingin disalin:\n1. Nomor\n2. Pesan'
-        : 'Choose what to copy:\n1. Number\n2. Message'
-    );
-    if (choice === '1') {
+    if (type === 'number') {
       navigator.clipboard.writeText(item.number);
       alert(language === 'id' ? 'Nomor disalin ke clipboard!' : 'Number copied to clipboard!');
-    } else if (choice === '2') {
+    } else if (type === 'message') {
       navigator.clipboard.writeText(item.message);
       alert(language === 'id' ? 'Pesan disalin ke clipboard!' : 'Message copied to clipboard!');
     }
+    setShowCopyOptions(null); // Hide copy options after selection
+  };
+
+  const toggleCopyOptions = (itemId) => {
+    setShowCopyOptions(showCopyOptions === itemId ? null : itemId); // Toggle visibility
   };
 
   const handleResend = (item) => {
@@ -146,10 +146,10 @@ export default function MainContent({ language }) {
     // Extract country code and phone number
     const countryCode = item.number.match(/^\+(\d+)/)?.[1] || '62';
     const phone = item.number.replace(/^\+\d+/, '');
-    // Dispatch event to populate form
+    // Dispatch event to populate form and trigger submission
     window.dispatchEvent(
       new CustomEvent('resendMessage', {
-        detail: { countryCode, phone, message: item.message },
+        detail: { countryCode, phone, message: item.message, autoSubmit: true },
       })
     );
     // Scroll to form
@@ -210,7 +210,7 @@ export default function MainContent({ language }) {
                     whileHover={{ scale: item.isPlaceholder ? 1 : 1.02 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="card h-64 flex flex-col justify-between">
+                    <div className="card h-64 flex flex-col justify-between relative">
                       <div>
                         <p className={`font-semibold text-[var(--whatsapp-dark-green)] ${item.isPlaceholder ? 'opacity-50' : ''}`}>
                           {item.number}
@@ -220,16 +220,39 @@ export default function MainContent({ language }) {
                         </p>
                       </div>
                       {!item.isPlaceholder && (
-                        <div className="mt-4 flex space-x-3 justify-center">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleCopy(item)}
-                            className="p-2 bg-[var(--whatsapp-dark-green)] text-white rounded-full hover:bg-[#004238]"
-                            title={content[language].history.copy}
-                          >
-                            <IoCopyOutline />
-                          </motion.button>
+                        <div className="mt-4 flex space-x-3 justify-center relative">
+                          <div className="relative">
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => toggleCopyOptions(item.id)}
+                              className="p-2 bg-[var(--whatsapp-dark-green)] text-white rounded-full hover:bg-[#004238]"
+                              title={content[language].history.copy}
+                            >
+                              <IoCopyOutline />
+                            </motion.button>
+                            {showCopyOptions === item.id && (
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="absolute bottom-12 left-0 bg-white shadow-lg rounded-lg p-2 flex flex-col space-y-2 z-10"
+                              >
+                                <button
+                                  onClick={() => handleCopy(item, 'number')}
+                                  className="text-sm text-[var(--whatsapp-dark-green)] hover:bg-gray-100 px-2 py-1 rounded"
+                                >
+                                  {content[language].history.copyNumber}
+                                </button>
+                                <button
+                                  onClick={() => handleCopy(item, 'message')}
+                                  className="text-sm text-[var(--whatsapp-dark-green)] hover:bg-gray-100 px-2 py-1 rounded"
+                                >
+                                  {content[language].history.copyMessage}
+                                </button>
+                              </motion.div>
+                            )}
+                          </div>
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
@@ -366,7 +389,7 @@ export default function MainContent({ language }) {
                   x: {
                     repeat: Infinity,
                     repeatType: 'loop',
-                    duration: 30,
+                    duration: 20,
                     ease: 'linear',
                   },
                 }}
@@ -374,16 +397,12 @@ export default function MainContent({ language }) {
                 {[...techStack, ...techStack].map((tech, index) => (
                   <div
                     key={`${tech.name}-${index}`}
-                    className="flex-shrink-0 w-1/3 md:w-1/5 flex flex-col justify-center items-center px-6"
+                    className="flex-shrink-0 w-1/3 sm:w-1/5 flex flex-col justify-center items-center px-4"
                   >
-                    <motion.div
-                      className="chat-bubble text-6xl text-[var(--whatsapp-dark-green)] mb-2"
-                      animate={{ y: [-10, 10, -10] }}
-                      transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-                    >
+                    <div className="text-8xl text-[var(--whatsapp-dark-green)] mb-2">
                       {tech.icon}
-                    </motion.div>
-                    <span className="text-sm text-[var(--whatsapp-dark-green)]">{tech.name}</span>
+                    </div>
+                    <span className="text-lg font-medium text-[var(--whatsapp-dark-green)]">{tech.name}</span>
                   </div>
                 ))}
               </motion.div>

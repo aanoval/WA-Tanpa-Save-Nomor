@@ -1,13 +1,91 @@
-import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { IoMoon, IoSunny } from 'react-icons/io5';
+import { IoChatbubblesSharp, IoSendSharp } from 'react-icons/io5';
 import Link from 'next/link';
 
-export default function TermsOfService() {
-  const router = useRouter();
+export default function TermsOfService({ language, toggleLanguage }) {
+  const content = {
+    id: {
+      title: 'Syarat dan Ketentuan',
+      subtitle: 'Ketentuan penggunaan layanan WA Tanpa Save Nomor.',
+      sections: [
+        {
+          title: '1. Penerimaan Syarat',
+          text: 'Dengan mengakses atau menggunakan WA Tanpa Save Nomor di <a href="https://wasend.aibiz.id" class="text-[var(--whatsapp-dark-green)] hover:underline">https://wasend.aibiz.id</a>, Anda setuju untuk terikat oleh Syarat dan Ketentuan ini ("S&K"). Jika Anda tidak setuju, harap jangan menggunakan layanan kami.',
+        },
+        {
+          title: '2. Layanan yang Disediakan',
+          text: 'WA Tanpa Save Nomor adalah aplikasi web yang memungkinkan Anda mengirim pesan WhatsApp tanpa menyimpan nomor tujuan di kontak Anda. Kami berhak untuk memodifikasi, menangguhkan, atau menghentikan bagian mana pun dari layanan ini kapan saja tanpa pemberitahuan sebelumnya.',
+        },
+        {
+          title: '3. Tanggung Jawab Pengguna',
+          text: 'Anda setuju untuk: <ul class="list-disc list-inside ml-4"><li>Menggunakan layanan sesuai dengan hukum dan peraturan yang berlaku.</li><li>Tidak menyalahgunakan layanan, termasuk mengirim spam, pesan yang melanggar hukum, atau melakukan aktivitas yang mengganggu.</li><li>Memastikan nomor telepon dan pesan yang dimasukkan akurat dan sesuai dengan tujuan penggunaan.</li></ul>',
+        },
+        {
+          title: '4. Penghentian Penggunaan',
+          text: 'Kami dapat menangguhkan atau menghentikan akses Anda ke layanan jika Anda melanggar S&K ini. Anda dapat menghapus riwayat pesan Anda kapan saja menggunakan tombol "Hapus Riwayat" di aplikasi.',
+        },
+        {
+          title: '5. Batasan Tanggung Jawab',
+          text: 'WA Tanpa Save Nomor disediakan "sebagaimana adanya" tanpa jaminan apa pun. Kami tidak bertanggung jawab atas kerusakan yang timbul dari penggunaan layanan, termasuk kehilangan data atau gangguan layanan. Anda bertanggung jawab atas keamanan perangkat Anda, karena riwayat pesan disimpan secara lokal.',
+        },
+        {
+          title: '6. Hak Kekayaan Intelektual',
+          text: 'Semua konten, teknologi, dan desain dalam WA Tanpa Save Nomor dimiliki oleh Aibiz ID atau pemberi lisensinya. Anda dilarang menyalin, memodifikasi, atau mendistribusikan bagian mana pun dari layanan tanpa izin kami.',
+        },
+        {
+          title: '7. Hubungi Kami',
+          text: 'Untuk pertanyaan atau kekhawatiran tentang S&K ini, hubungi kami melalui: <ul class="list-disc list-inside ml-4"><li>Email: <a href="mailto:support@aibiz.id" class="text-[var(--whatsapp-dark-green)] hover:underline">support@aibiz.id</a></li><li>WhatsApp: <a href="https://wa.me/6287787615432" class="text-[var(--whatsapp-dark-green)] hover:underline">+62 877-8761-5432</a></li><li>Website: <a href="https://aibiz.id" class="text-[var(--whatsapp-dark-green)] hover:underline">https://aibiz.id</a></li><li>Alamat: Alday Group, DI Yogyakarta (<a href="https://maps.app.goo.gl/AToxLtQmpTf9NRGt5" class="text-[var(--whatsapp-dark-green)] hover:underline">Lihat di Google Maps</a>)</li></ul>',
+        },
+        {
+          title: '8. Perubahan pada Syarat Ini',
+          text: 'Kami dapat memperbarui S&K ini secara berkala. Versi terbaru akan selalu tersedia di <a href="https://wasend.aibiz.id/tos" class="text-[var(--whatsapp-dark-green)] hover:underline">https://wasend.aibiz.id/tos</a>. Penggunaan layanan yang berkelanjutan setelah perubahan menunjukkan penerimaan syarat baru.',
+        },
+      ],
+      footer: '© {year} Aibiz ID. Hak cipta dilindungi.',
+    },
+    en: {
+      title: 'Terms of Service',
+      subtitle: 'Terms of use for the WA Tanpa Save Nomor service.',
+      sections: [
+        {
+          title: '1. Acceptance of Terms',
+          text: 'By accessing or using WA Tanpa Save Nomor at <a href="https://wasend.aibiz.id" class="text-[var(--whatsapp-dark-green)] hover:underline">https://wasend.aibiz.id</a>, you agree to be bound by these Terms of Service ("TOS"). If you do not agree, please do not use our services.',
+        },
+        {
+          title: '2. Services Provided',
+          text: 'WA Tanpa Save Nomor is a web application that allows you to send WhatsApp messages without saving the recipient’s number in your contacts. We reserve the right to modify, suspend, or discontinue any part of the service at any time without prior notice.',
+        },
+        {
+          title: '3. User Responsibilities',
+          text: 'You agree to: <ul class="list-disc list-inside ml-4"><li>Use the service in compliance with all applicable laws and regulations.</li><li>Not misuse the service, including sending spam, illegal messages, or engaging in disruptive activities.</li><li>Ensure the phone numbers and messages entered are accurate and appropriate for their intended use.</li></ul>',
+        },
+        {
+          title: '4. Termination of Use',
+          text: 'We may suspend or terminate your access to the service if you violate these TOS. You can delete your message history at any time using the "Clear History" button in the app.',
+        },
+        {
+          title: '5. Limitation of Liability',
+          text: 'WA Tanpa Save Nomor is provided "as is" without any warranties. We are not liable for any damages arising from your use of the service, including data loss or service interruptions. You are responsible for the security of your device, as message history is stored locally.',
+        },
+        {
+          title: '6. Intellectual Property',
+          text: 'All content, technology, and designs in WA Tanpa Save Nomor are owned by Aibiz ID or its licensors. You may not copy, modify, or distribute any part of the service without our permission.',
+        },
+        {
+          title: '7. Contact Us',
+          text: 'For questions or concerns about these TOS, reach us at: <ul class="list-disc list-inside ml-4"><li>Email: <a href="mailto:support@aibiz.id" class="text-[var(--whatsapp-dark-green)] hover:underline">support@aibiz.id</a></li><li>WhatsApp: <a href="https://wa.me/6287787615432" class="text-[var(--whatsapp-dark-green)] hover:underline">+62 877-8761-5432</a></li><li>Website: <a href="https://aibiz.id" class="text-[var(--whatsapp-dark-green)] hover:underline">https://aibiz.id</a></li><li>Address: Alday Group, DI Yogyakarta (<a href="https://maps.app.goo.gl/AToxLtQmpTf9NRGt5" class="text-[var(--whatsapp-dark-green)] hover:underline">View on Google Maps</a>)</li></ul>',
+        },
+        {
+          title: '8. Changes to These Terms',
+          text: 'We may update these TOS periodically. The latest version will always be available at <a href="https://wasend.aibiz.id/tos" class="text-[var(--whatsapp-dark-green)] hover:underline">https://wasend.aibiz.id/tos</a>. Continued use of the service after changes constitutes acceptance of the new terms.',
+        },
+      ],
+      footer: '© {year} Aibiz ID. All rights reserved.',
+    },
+  };
+
   const [scrolled, setScrolled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,169 +95,92 @@ export default function TermsOfService() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-  };
-
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-gray-900 via-indigo-950 to-purple-900' : 'bg-gradient-to-br from-gray-200 via-blue-100 to-teal-100'} transition-colors duration-500 overflow-hidden`}>
+    <div className="min-h-screen bg-[var(--whatsapp-cream)]">
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-        className={`fixed top-0 left-0 w-full p-4 sm:p-6 flex justify-between items-center z-50 ${scrolled ? (darkMode ? 'bg-gray-900 bg-opacity-90' : 'bg-white bg-opacity-90') : 'bg-transparent'} shadow-md`}
+        className={`fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center ${scrolled ? 'bg-[var(--whatsapp-dark-green)]/90 backdrop-blur-md shadow-md' : 'bg-transparent'}`}
       >
-        <Link href="/">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-green-400 animate-pulse cursor-pointer">
-            AIBiz Dashboard
-          </h1>
-        </Link>
-        <motion.button
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => router.push('/login')}
-          className="px-4 py-2 sm:px-6 sm:py-2.5 bg-green-500 text-white rounded-lg font-medium shadow-lg hover:bg-green-600 transition-all duration-300"
+        <motion.h1
+          whileHover={{ scale: 1.05 }}
+          className="text-2xl font-bold text-white"
         >
-          Login
-        </motion.button>
+          <Link href="/">Aibiz ID</Link>
+        </motion.h1>
+        <div className="flex items-center space-x-4">
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={toggleLanguage}
+            className="flex items-center space-x-1 text-white cursor-pointer"
+            aria-label="Toggle language"
+          >
+            <img
+              src={language === 'id' ? 'https://flagcdn.com/16x12/id.png' : 'https://flagcdn.com/16x12/gb.png'}
+              alt={language === 'id' ? 'Bendera Indonesia' : 'UK Flag'}
+              className="w-5 h-5"
+            />
+            <span className="text-lg font-medium">{language === 'id' ? 'ID' : 'EN'}</span>
+          </motion.div>
+          <Link href="/">
+            <motion.button
+              whileHover={{ scale: 1.1, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 bg-[var(--whatsapp-dark-green)] text-white rounded-lg font-medium shadow hover:bg-[#004238]"
+            >
+              {language === 'id' ? 'Kembali ke Beranda' : 'Back to Home'}
+            </motion.button>
+          </Link>
+        </div>
       </motion.header>
 
       {/* Main Content */}
-      <main className="flex flex-col items-center justify-center min-h-screen pt-24 pb-20 px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="max-w-3xl mx-auto text-center"
+      <main className="pt-24 pb-20 px-4">
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="container text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
-            Terms of Service
-          </h2>
-          <div className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} text-left space-y-6`}>
-            <section>
-              <h3 className="text-xl font-semibold mb-2">1. Acceptance of Terms</h3>
-              <p>
-                By accessing or using AIBiz Dashboard at{' '}
-                <a href="https://wa.aibiz.id" className="text-green-400 hover:underline">https://wa.aibiz.id</a> (App ID: 2863139783849877), you agree to be bound by these Terms of Service ("TOS"). If you do not agree, please do not use our services.
-              </p>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">2. Services Provided</h3>
-              <p>
-                AIBiz Dashboard provides admin tools for WhatsApp integration, including messaging, payment verification, and user analytics. We reserve the right to modify or discontinue any part of the service at any time without prior notice.
-              </p>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">3. User Responsibilities</h3>
-              <p>You agree to:</p>
-              <ul className="list-disc list-inside ml-4">
-                <li>Use the service in compliance with all applicable laws and regulations.</li>
-                <li>Provide accurate information during registration and keep it updated.</li>
-                <li>Not misuse the service, including sending spam or engaging in illegal activities.</li>
-              </ul>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">4. Account Termination</h3>
-              <p>
-                We may suspend or terminate your account if you violate these TOS. To request voluntary account deletion, please follow our{' '}
-                <Link href="/delete">
-                  <span className="text-green-400 hover:underline cursor-pointer">Delete Instructions</span>
-                </Link>.
-              </p>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">5. Limitation of Liability</h3>
-              <p>
-                AIBiz Dashboard is provided "as is" without warranties of any kind. We are not liable for any damages arising from your use of the service, including data loss or service interruptions.
-              </p>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">6. Intellectual Property</h3>
-              <p>
-                All content and technology in AIBiz Dashboard are owned by AIBiz.ID or its licensors. You may not copy, modify, or distribute any part of the service without our permission.
-              </p>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">7. Contact Us</h3>
-              <p>For questions or concerns about these TOS, reach us at:</p>
-              <p>Email: <a href="mailto:cs@aibiz.id" className="text-green-400 hover:underline">cs@aibiz.id</a></p>
-              <p>WhatsApp: <a href="https://wa.me/6287780945321" className="text-green-400 hover:underline">+62 877-8094-5321</a></p>
-              <p>Website: <a href="https://wa.aibiz.id" className="text-green-400 hover:underline">https://wa.aibiz.id</a></p>
-            </section>
-
-            <section>
-              <h3 className="text-xl font-semibold mb-2">8. Changes to These Terms</h3>
-              <p>
-                We may update these TOS periodically. The latest version will be available at{' '}
-                <a href="https://wa.aibiz.id/tos" className="text-green-400 hover:underline">https://wa.aibiz.id/tos</a>. Continued use of the service after changes constitutes acceptance of the new terms.
-              </p>
-            </section>
+          <motion.div
+            className="chat-bubble mx-auto text-5xl mb-6 text-[var(--whatsapp-dark-green)]"
+            animate={{ y: [-10, 10, -10] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          >
+            <IoChatbubblesSharp />
+          </motion.div>
+          <h2 className="section-heading text-4xl text-[var(--whatsapp-dark-green)]">{content[language].title}</h2>
+          <p className="section-subheading font-light text-[var(--whatsapp-dark-green)] mt-2">{content[language].subtitle}</p>
+          <div className="max-w-3xl mx-auto mt-12 space-y-8 text-left">
+            {content[language].sections.map((section, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="card"
+              >
+                <h3 className="text-xl font-semibold text-[var(--whatsapp-dark-green)] mb-2">{section.title}</h3>
+                <div
+                  className="text-base text-[var(--whatsapp-dark-green)] leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: section.text }}
+                />
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
+        </motion.section>
       </main>
 
       {/* Footer */}
-      <footer className="py-6 text-center">
-        <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'} text-sm`}>
-          © {new Date().getFullYear()} AIBiz.ID. All rights reserved.
+      <footer className="py-6 text-center bg-[var(--whatsapp-dark-green)] text-white">
+        <p className="text-sm">
+          {content[language].footer.replace('{year}', new Date().getFullYear())}
         </p>
       </footer>
-
-      {/* Dark/Light Mode Toggle */}
-      <motion.button
-        whileHover={{ scale: 1.2 }}
-        whileTap={{ scale: 0.9 }}
-        className={`fixed bottom-6 right-6 p-3 rounded-full shadow-lg ${darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-white text-gray-900'} transition-all duration-300`}
-        onClick={toggleDarkMode}
-      >
-        <AnimatePresence mode="wait">
-          {darkMode ? (
-            <motion.div
-              key="sun"
-              initial={{ opacity: 0, rotate: -90 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              exit={{ opacity: 0, rotate: 90 }}
-              transition={{ duration: 0.3 }}
-            >
-              <IoSunny size={24} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="moon"
-              initial={{ opacity: 0, rotate: -90 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              exit={{ opacity: 0, rotate: 90 }}
-              transition={{ duration: 0.3 }}
-            >
-              <IoMoon size={24} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
-
-      {/* CSS khusus */}
-      <style jsx global>{`
-        @media (max-width: 640px) {
-          .max-w-3xl {
-            max-width: 100%;
-            padding-left: 1rem;
-            padding-right: 1rem;
-          }
-          .text-4xl {
-            font-size: 2rem;
-          }
-          .text-xl {
-            font-size: 1.125rem;
-          }
-        }
-      `}</style>
     </div>
   );
 }
