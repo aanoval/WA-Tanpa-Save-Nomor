@@ -66,6 +66,7 @@ const content = {
 export default function MainContent({ language }) {
   const [history, setHistory] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isClient, setIsClient] = useState(false);
   const sliderRef = useRef(null);
 
   // Initialize 10 placeholder history items
@@ -77,14 +78,21 @@ export default function MainContent({ language }) {
     isPlaceholder: true,
   }));
 
+  // Set client-side flag
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // History Storage
   useEffect(() => {
-    const savedHistory = localStorage.getItem('waHistory');
-    if (savedHistory) {
-      const parsedHistory = JSON.parse(savedHistory).slice(0, 10);
-      setHistory(parsedHistory);
-      if (parsedHistory.length < 4) {
-        setCurrentSlide(Math.floor(parsedHistory.length / 2));
+    if (typeof window !== 'undefined') {
+      const savedHistory = localStorage.getItem('waHistory');
+      if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory).slice(0, 10);
+        setHistory(parsedHistory);
+        if (parsedHistory.length < 4) {
+          setCurrentSlide(Math.floor(parsedHistory.length / 2));
+        }
       }
     }
   }, []);
@@ -98,20 +106,22 @@ export default function MainContent({ language }) {
   };
 
   const handleResend = (item) => {
-    if (item.isPlaceholder) return;
+    if (item.isPlaceholder || typeof window === 'undefined') return;
     const countryCode = item.number.slice(0, item.number.length - 10);
     const phone = item.number.slice(-10);
     window.dispatchEvent(new CustomEvent('resendMessage', { detail: { countryCode, phone, message: item.message } }));
   };
 
   const handleClearHistory = () => {
-    setHistory([]);
-    localStorage.removeItem('waHistory');
-    setCurrentSlide(0);
+    if (typeof window !== 'undefined') {
+      setHistory([]);
+      localStorage.removeItem('waHistory');
+      setCurrentSlide(0);
+    }
   };
 
   const handleSlide = (direction) => {
-    const itemsPerSlide = window.innerWidth >= 768 ? 3 : 1;
+    const itemsPerSlide = isClient && typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1;
     if (direction === 'next' && currentSlide < displayHistory.length - itemsPerSlide) {
       setCurrentSlide(currentSlide + 1);
     } else if (direction === 'prev' && currentSlide > 0) {
@@ -146,7 +156,7 @@ export default function MainContent({ language }) {
             <div className="overflow-hidden">
               <motion.div
                 className="flex"
-                animate={{ x: `-${currentSlide * (100 / (window.innerWidth >= 768 ? 3 : 1))}%` }}
+                animate={{ x: `-${currentSlide * (100 / (isClient && typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1))}%` }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
               >
                 {displayHistory.map((item) => (
@@ -207,7 +217,7 @@ export default function MainContent({ language }) {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSlide('next')}
                 className="p-3 bg-[var(--whatsapp-dark-green)] text-white rounded-full disabled:opacity-50"
-                disabled={currentSlide >= displayHistory.length - (window.innerWidth >= 768 ? 3 : 1)}
+                disabled={currentSlide >= displayHistory.length - (isClient && typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1)}
               >
                 <IoChevronForward />
               </motion.button>
