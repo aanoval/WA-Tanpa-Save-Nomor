@@ -1,7 +1,7 @@
 📱 WA Tanpa Save Nomor
    
 WA Tanpa Save Nomor adalah aplikasi web modern yang memungkinkan Anda mengirim pesan WhatsApp tanpa perlu menyimpan nomor tujuan di kontak Anda. Dibangun dengan Next.js, aplikasi ini menawarkan pengalaman pengguna yang intuitif, cepat, dan responsif, dengan dukungan dua bahasa (Indonesia 🇮🇩 dan Inggris 🇬🇧), animasi halus, dan penyimpanan riwayat pesan secara lokal. Dideploy langsung di Vercel untuk aksesibilitas maksimal.
-🌐 Demo: Coba sekarang di Vercel!
+🌐 Demo: https://wasend.aibiz.id!
 
 🚀 Fitur Utama
 
