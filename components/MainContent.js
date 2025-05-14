@@ -6,9 +6,9 @@ import countryList from 'react-select-country-list';
 const content = {
   id: {
     form: {
-      title: 'Kirim Pesan WhatsApp Tanpa Simpan Nomor',
-      subtitle: 'Masukkan nomor tujuan dan pesan, lalu kirim langsung via WhatsApp.',
-      countryCode: 'Kode Negara',
+      title: 'Kirim Pesan WhatsApp',
+      subtitle: 'Masukkan nomor dan pesan untuk kirim langsung.',
+      countryCode: 'Kode Telepon',
       phone: 'Nomor Telepon',
       message: 'Pesan Anda',
       cta: 'Kirim Pesan',
@@ -29,8 +29,8 @@ const content = {
       title: 'Panduan Penggunaan',
       subtitle: 'Ikuti langkah-langkah berikut untuk mengirim pesan tanpa menyimpan nomor:',
       steps: [
-        { text: 'Pilih kode negara dari dropdown (default: +62 untuk Indonesia).', icon: <IoSendSharp /> },
-        { text: 'Masukkan nomor telepon tujuan tanpa kode negara (contoh: 87787615432).', icon: <IoSendSharp /> },
+        { text: 'Pilih kode telepon dari dropdown (default: 62 untuk Indonesia).', icon: <IoSendSharp /> },
+        { text: 'Masukkan nomor telepon tujuan tanpa kode telepon (contoh: 858123131313).', icon: <IoSendSharp /> },
         { text: 'Tulis pesan yang ingin Anda kirim di kolom pesan.', icon: <IoSendSharp /> },
         { text: 'Klik "Kirim Pesan" untuk membuka WhatsApp dengan nomor dan pesan yang diisi.', icon: <IoSendSharp /> },
         { text: 'Riwayat pesan Anda akan disimpan secara lokal dan dapat dilihat di bagian riwayat.', icon: <IoSendSharp /> },
@@ -46,9 +46,9 @@ const content = {
   },
   en: {
     form: {
-      title: 'Send WhatsApp Message Without Saving Number',
-      subtitle: 'Enter the destination number and message, then send directly via WhatsApp.',
-      countryCode: 'Country Code',
+      title: 'Send WhatsApp Message',
+      subtitle: 'Enter number and message to send directly.',
+      countryCode: 'Phone Code',
       phone: 'Phone Number',
       message: 'Your Message',
       cta: 'Send Message',
@@ -69,8 +69,8 @@ const content = {
       title: 'Usage Guide',
       subtitle: 'Follow these steps to send messages without saving the number:',
       steps: [
-        { text: 'Select the country code from the dropdown (default: +62 for Indonesia).', icon: <IoSendSharp /> },
-        { text: 'Enter the destination phone number without the country code (e.g., 87787615432).', icon: <IoSendSharp /> },
+        { text: 'Select the phone code from the dropdown (default: 62 for Indonesia).', icon: <IoSendSharp /> },
+        { text: 'Enter the destination phone number without the phone code (e.g., 858123131313).', icon: <IoSendSharp /> },
         { text: 'Write the message you want to send in the message field.', icon: <IoSendSharp /> },
         { text: 'Click "Send Message" to open WhatsApp with the number and message filled in.', icon: <IoSendSharp /> },
         { text: 'Your message history will be saved locally and can be viewed in the history section.', icon: <IoSendSharp /> },
@@ -87,13 +87,16 @@ const content = {
 };
 
 export default function MainContent({ language }) {
-  const [formData, setFormData] = useState({ countryCode: '+62', phone: '', message: '' });
+  const [formData, setFormData] = useState({ countryCode: '62', phone: '', message: '' });
   const [formError, setFormError] = useState('');
   const [history, setHistory] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef(null);
   const canvasRef = useRef(null);
-  const countries = countryList().getData();
+  const countries = countryList().getData().map(country => ({
+    ...country,
+    value: country.value.replace('+', ''),
+  }));
 
   // Bubble Animation
   useEffect(() => {
@@ -212,7 +215,7 @@ export default function MainContent({ language }) {
       setFormError(content[language].form.invalidPhone);
       return;
     }
-    const fullNumber = `${countryCode}${phone}`.replace('+', '');
+    const fullNumber = `${countryCode}${phone}`;
     const encodedMessage = encodeURIComponent(message);
     const newHistory = {
       id: Date.now(),
@@ -223,12 +226,11 @@ export default function MainContent({ language }) {
     const updatedHistory = [newHistory, ...history].slice(0, 10);
     setHistory(updatedHistory);
     localStorage.setItem('waHistory', JSON.stringify(updatedHistory));
-    // Use WhatsApp Public API
     window.open(
       `https://api.whatsapp.com/send/?phone=${fullNumber}&text=${encodedMessage}&type=phone_number&app_absent=0`,
       '_blank'
     );
-    setFormData({ countryCode: '+62', phone: '', message: '' });
+    setFormData({ countryCode: '62', phone: '', message: '' });
   };
 
   const handleCopy = (item) => {
@@ -237,7 +239,7 @@ export default function MainContent({ language }) {
   };
 
   const handleResend = (item) => {
-    const countryCode = item.number.slice(0, item.number.length - 10).replace(/^(\d+)/, '+$1');
+    const countryCode = item.number.slice(0, item.number.length - 10);
     const phone = item.number.slice(-10);
     setFormData({ countryCode, phone, message: item.message });
   };
@@ -267,12 +269,12 @@ export default function MainContent({ language }) {
         id="form"
       >
         <canvas ref={canvasRef} className="absolute inset-0 z-0" />
-        <div className="relative z-10 max-w-lg mx-auto text-center bg-white/20 backdrop-blur-lg rounded-2xl shadow-2xl p-8">
+        <div className="relative z-10 max-w-md mx-auto text-center bg-white/20 backdrop-blur-lg rounded-2xl shadow-2xl p-6">
           <motion.h2
             initial={{ scale: 0.8, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold mb-4"
+            className="text-3xl md:text-4xl font-bold mb-4"
           >
             {content[language].form.title}
           </motion.h2>
@@ -280,20 +282,20 @@ export default function MainContent({ language }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-lg mb-8"
+            className="text-base mb-6"
           >
             {content[language].form.subtitle}
           </motion.p>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div>
-              <label htmlFor="countryCode" className="block text-left font-medium mb-2">
+              <label htmlFor="countryCode" className="block text-left font-medium mb-1 text-sm">
                 {content[language].form.countryCode}
               </label>
               <select
                 id="countryCode"
                 value={formData.countryCode}
                 onChange={handleCountryChange}
-                className="w-full p-3 bg-white/90 border border-[#D1D7DB] rounded-lg shadow-sm text-[#005C4B] focus:ring-2 focus:ring-[#005C4B] transition-all duration-300"
+                className="w-full p-2 bg-white/90 border border-[#D1D7DB] rounded-lg shadow-sm text-[#005C4B] text-sm focus:ring-2 focus:ring-[#005C4B] transition-all duration-300"
               >
                 {countries.map((country) => (
                   <option key={country.value} value={country.value}>
@@ -303,7 +305,7 @@ export default function MainContent({ language }) {
               </select>
             </div>
             <div>
-              <label htmlFor="phone" className="block text-left font-medium mb-2">
+              <label htmlFor="phone" className="block text-left font-medium mb-1 text-sm">
                 {content[language].form.phone}
               </label>
               <input
@@ -312,11 +314,11 @@ export default function MainContent({ language }) {
                 value={formData.phone}
                 onChange={handleFormChange}
                 placeholder={content[language].form.phone}
-                className="w-full p-3 bg-white/90 border border-[#D1D7DB] rounded-lg shadow-sm text-[#005C4B] focus:ring-2 focus:ring-[#005C4B] transition-all duration-300"
+                className="w-full p-2 bg-white/90 border border-[#D1D7DB] rounded-lg shadow-sm text-[#005C4B] text-sm focus:ring-2 focus:ring-[#005C4B] transition-all duration-300"
               />
             </div>
             <div>
-              <label htmlFor="message" className="block text-left font-medium mb-2">
+              <label htmlFor="message" className="block text-left font-medium mb-1 text-sm">
                 {content[language].form.message}
               </label>
               <textarea
@@ -325,15 +327,15 @@ export default function MainContent({ language }) {
                 value={formData.message}
                 onChange={handleFormChange}
                 placeholder={content[language].form.message}
-                className="w-full p-3 bg-white/90 border border-[#D1D7DB] rounded-lg shadow-sm text-[#005C4B] focus:ring-2 focus:ring-[#005C4B] transition-all duration-300"
+                className="w-full p-2 bg-white/90 border border-[#D1D7DB] rounded-lg shadow-sm text-[#005C4B] text-sm focus:ring-2 focus:ring-[#005C4B] transition-all duration-300 max-h-32 overflow-y-auto"
               ></textarea>
             </div>
-            {formError && <p className="text-red-300">{formError}</p>}
+            {formError && <p className="text-red-300 text-sm">{formError}</p>}
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: '0 4px 12px rgba(0, 92, 75, 0.3)' }}
               whileTap={{ scale: 0.95 }}
               onClick={handleFormSubmit}
-              className="w-full px-6 py-3 bg-[#005C4B] text-white rounded-lg font-medium hover:bg-[#004238] flex items-center justify-center space-x-2"
+              className="w-full px-4 py-2 bg-[#005C4B] text-white rounded-lg font-medium text-sm hover:bg-[#004238] flex items-center justify-center space-x-2"
             >
               <IoSendSharp />
               <span>{content[language].form.cta}</span>
@@ -356,7 +358,7 @@ export default function MainContent({ language }) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-[#005C4B] mb-4"
+            className="text-3xl md:text-4xl font-bold text-[#005C4B] mb-4"
           >
             {content[language].history.title}
           </motion.h2>
@@ -364,7 +366,7 @@ export default function MainContent({ language }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-[#005C4B] mb-8"
+            className="text-base text-[#005C4B] mb-8"
           >
             {content[language].history.subtitle}
           </motion.p>
@@ -384,10 +386,9 @@ export default function MainContent({ language }) {
                       className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4"
                       whileHover={{ scale: 1.05, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)' }}
                     >
- looped here to avoid truncation
                       <div className="p-6 rounded-xl bg-white shadow-lg border border-[#D1D7DB] min-h-[200px] flex flex-col justify-between">
                         <div>
-                          <p className="text-[#005C4B] font-medium">+{item.number}</p>
+                          <p className="text-[#005C4B] font-medium">{item.number}</p>
                           <p className="text-[#005C4B] mt-2 truncate">{item.message}</p>
                         </div>
                         <div className="mt-4 flex space-x-2 justify-center">
@@ -467,7 +468,7 @@ export default function MainContent({ language }) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-[#005C4B] mb-4"
+            className="text-3xl md:text-4xl font-bold text-[#005C4B] mb-4"
           >
             {content[language].guide.title}
           </motion.h2>
@@ -475,7 +476,7 @@ export default function MainContent({ language }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-[#005C4B] mb-8"
+            className="text-base text-[#005C4B] mb-8"
           >
             {content[language].guide.subtitle}
           </motion.p>
@@ -523,7 +524,7 @@ export default function MainContent({ language }) {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-[#005C4B] mb-4"
+            className="text-3xl md:text-4xl font-bold text-[#005C4B] mb-4"
           >
             {content[language].about.title}
           </motion.h2>
@@ -531,7 +532,7 @@ export default function MainContent({ language }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-[#005C4B] mb-4"
+            className="text-base text-[#005C4B] mb-4"
           >
             {content[language].about.subtitle}
           </motion.p>
