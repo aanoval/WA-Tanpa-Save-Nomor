@@ -297,7 +297,7 @@ export default function MainContent({ language }) {
         id="guide"
       >
         <div className="container">
-          <div className="text-center mb-12">
+          <div className="text-center mb Ární12">
             <motion.div
               className="chat-bubble mx-auto text-4xl mb-4"
               animate={{ y: [-10, 10, -10] }}
@@ -365,7 +365,7 @@ export default function MainContent({ language }) {
           <div className="mt-16">
             <h3 className="section-heading text-3xl">{content[language].about.achievements.title}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 max-w-5xl mx-auto">
-              {content[language].about.achvements.items.map((achievement, index) => (
+              {content[language].about.achievements.items.map((achievement, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
